@@ -10,11 +10,11 @@ namespace Refactoring
     {
         public static string Statement(Invoice invoice, IEnumerable<Play> plays)
         {
-            var statementData = new StatementData
-            {
-                Customer = invoice.Customer,
-                Performances = invoice.Performances.Select(EnrichPerformance)
-            };
+            var statementData = new StatementData();
+            statementData.Customer = invoice.Customer;
+            statementData.Performances = invoice.Performances.Select(EnrichPerformance);
+            statementData.TotalAmount = TotalAmount(statementData);
+            statementData.TotalVolumeCredits = TotalVolumeCredits(statementData);
 
             return RenderPlainText(statementData, plays);
 
@@ -64,12 +64,22 @@ namespace Refactoring
                 if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
                 return credits;
             }
+            decimal TotalAmount(StatementData data)
+            {
+                return data.Performances.Sum(p => p.Amount);
+            }
+            int TotalVolumeCredits(StatementData data)
+            {
+                return data.Performances.Sum(p => p.VolumeCredits);
+            }
         }
 
         private class StatementData
         {
             public string Customer { get; set; }
             public IEnumerable<EnrichedPerformance> Performances { get; set; }
+            public decimal TotalAmount { get; set; }
+            public int TotalVolumeCredits { get; set; }
         }
 
         private class EnrichedPerformance : Invoice.Performance
@@ -93,18 +103,10 @@ namespace Refactoring
                 result += $"  {perf.Play.Name}: {Usd(perf.Amount)} ({perf.Audience} seats){Environment.NewLine}";
             }
 
-            result += $"Amount owed is {Usd(TotalAmount())}{Environment.NewLine}";
-            result += $"You earned {TotalVolumeCredits()} credits{Environment.NewLine}";
+            result += $"Amount owed is {Usd(data.TotalAmount)}{Environment.NewLine}";
+            result += $"You earned {data.TotalVolumeCredits} credits{Environment.NewLine}";
             return result;
 
-            decimal TotalAmount()
-            {
-                return data.Performances.Sum(p => p.Amount);
-            }
-            int TotalVolumeCredits()
-            {
-                return data.Performances.Sum(p => p.VolumeCredits);
-            }
             string Usd(decimal aNumber)
             {
                 return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
