@@ -14,18 +14,8 @@ namespace Refactoring
         }
 
         public Play Play { get; }
-
         public abstract decimal Amount { get; }
-
-        public virtual int VolumeCredits
-        {
-            get
-            {
-                var credits = 0;
-                credits += Math.Max(_performance.Audience - 30, 0);
-                return credits;
-            }
-        }
+        public virtual int VolumeCredits => Math.Max(_performance.Audience - 30, 0);
     }
 
     internal class TragedyCalculator : PerformanceCalculator
