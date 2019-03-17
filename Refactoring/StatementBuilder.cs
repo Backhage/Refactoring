@@ -13,6 +13,11 @@ namespace Refactoring
             return RenderPlainText(CreateStatementData(invoice, plays));
         }
 
+        public static string HtmlStatement(Invoice invoice, IEnumerable<Play> plays)
+        {
+            return RenderHtml(CreateStatementData(invoice, plays));
+        }
+
         private static string RenderPlainText(StatementData data)
         {
             var result = $"Statement for {data.Customer}{Environment.NewLine}";
@@ -30,6 +35,11 @@ namespace Refactoring
             {
                 return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
             }
+        }
+
+        private static string RenderHtml(StatementData data)
+        {
+            return string.Empty;
         }
     }
 }
