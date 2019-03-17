@@ -16,7 +16,7 @@ namespace Refactoring
                 Performances = invoice.Performances
             };
 
-            return RenderPlainText(statementData, invoice, plays);
+            return RenderPlainText(statementData, plays);
         }
 
         private class StatementData
@@ -25,11 +25,11 @@ namespace Refactoring
             public IEnumerable<Invoice.Performance> Performances { get; set; }
         }
 
-        private static string RenderPlainText(StatementData data, Invoice invoice, IEnumerable<Play> plays)
+        private static string RenderPlainText(StatementData data, IEnumerable<Play> plays)
         {
             var result = $"Statement for {data.Customer}{Environment.NewLine}";
 
-            foreach (var perf in invoice.Performances)
+            foreach (var perf in data.Performances)
             {
                 result += $"  {PlayFor(perf).Name}: {Usd(AmountFor(perf))} ({perf.Audience} seats){Environment.NewLine}";
             }
@@ -40,11 +40,11 @@ namespace Refactoring
 
             decimal TotalAmount()
             {
-                return invoice.Performances.Sum(p => AmountFor(p));
+                return data.Performances.Sum(p => AmountFor(p));
             }
             int TotalVolumeCredits()
             {
-                return invoice.Performances.Sum(p => VolumeCreditsFor(p));
+                return data.Performances.Sum(p => VolumeCreditsFor(p));
             }
             string Usd(decimal aNumber)
             {
