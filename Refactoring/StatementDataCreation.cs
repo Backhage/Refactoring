@@ -14,10 +14,11 @@ namespace Refactoring
             statementData.Performances = invoice.Performances.Select(EnrichPerformance);
             statementData.TotalAmount = TotalAmount(statementData);
             statementData.TotalVolumeCredits = TotalVolumeCredits(statementData);
+            return statementData;
 
-            EnrichedPerformance EnrichPerformance(Invoice.Performance performance)
+            EnrichedPerformance EnrichPerformance(Invoice.Performance aPerformance)
             {
-                var result = new EnrichedPerformance(performance);
+                var result = new EnrichedPerformance(aPerformance);
                 result.Play = PlayFor(result);
                 result.Amount = AmountFor(result);
                 result.VolumeCredits = VolumeCreditsFor(result);
@@ -73,8 +74,6 @@ namespace Refactoring
             {
                 return data.Performances.Sum(p => p.VolumeCredits);
             }
-
-            return statementData;
         }
 
         internal class StatementData
