@@ -17,7 +17,7 @@ namespace Refactoring
 
             foreach (var perf in invoice.Performances)
             {
-                var play = plays.Single(p => p.PlayId == perf.PlayId);
+                var play = PlayFor(perf);
                 var thisAmount = 0m;
 
                 thisAmount = AmountFor(perf, play);
@@ -34,6 +34,11 @@ namespace Refactoring
             result += $"Amount owed is {(totalAmount / 100).ToString("C", format)}{Environment.NewLine}";
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
+
+            Play PlayFor(Invoice.Performance aPerformance)
+            {
+                return plays.Single(p => p.PlayId == aPerformance.PlayId);
+            }
         }
 
         private static decimal AmountFor(Invoice.Performance aPerformance, Play play)
