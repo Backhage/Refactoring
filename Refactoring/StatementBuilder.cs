@@ -13,7 +13,6 @@ namespace Refactoring
             var totalAmount = 0m;
             var volumeCredits = 0;
             var result = $"Statement for {invoice.Customer}{Environment.NewLine}";
-            var format = new CultureInfo("en-US").NumberFormat;
 
             foreach (var perf in invoice.Performances)
             {
@@ -23,7 +22,7 @@ namespace Refactoring
                 result += $"  {PlayFor(perf).Name}: {Format(AmountFor(perf) / 100)} ({perf.Audience} seats){Environment.NewLine}";
                 totalAmount += AmountFor(perf);
             }
-            result += $"Amount owed is {(totalAmount / 100).ToString("C", format)}{Environment.NewLine}";
+            result += $"Amount owed is {Format(totalAmount / 100)}{Environment.NewLine}";
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
 
