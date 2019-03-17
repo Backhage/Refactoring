@@ -19,14 +19,14 @@ namespace Refactoring
                 volumeCredits += VolumeCreditsFor(perf);
 
                 // print line for this order
-                result += $"  {PlayFor(perf).Name}: {Format(AmountFor(perf) / 100)} ({perf.Audience} seats){Environment.NewLine}";
+                result += $"  {PlayFor(perf).Name}: {Usd(AmountFor(perf) / 100)} ({perf.Audience} seats){Environment.NewLine}";
                 totalAmount += AmountFor(perf);
             }
-            result += $"Amount owed is {Format(totalAmount / 100)}{Environment.NewLine}";
+            result += $"Amount owed is {Usd(totalAmount / 100)}{Environment.NewLine}";
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
 
-            string Format(decimal aNumber)
+            string Usd(decimal aNumber)
             {
                 return aNumber.ToString("C", new CultureInfo("en-US"));
             }
