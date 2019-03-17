@@ -17,18 +17,17 @@ namespace Refactoring
 
             foreach (var perf in invoice.Performances)
             {
-                var play = PlayFor(perf);
                 var thisAmount = 0m;
 
-                thisAmount = AmountFor(perf, play);
+                thisAmount = AmountFor(perf, PlayFor(perf));
 
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
                 // add extra credit for every ten attendees
-                if ("comedy" == play.Type) volumeCredits += perf.Audience / 5;
+                if ("comedy" == PlayFor(perf).Type) volumeCredits += perf.Audience / 5;
 
                 // print line for this order
-                result += $"  {play.Name}: {(thisAmount / 100).ToString("C", format)} ({perf.Audience} seats){Environment.NewLine}";
+                result += $"  {PlayFor(perf).Name}: {(thisAmount / 100).ToString("C", format)} ({perf.Audience} seats){Environment.NewLine}";
                 totalAmount += thisAmount;
             }
             result += $"Amount owed is {(totalAmount / 100).ToString("C", format)}{Environment.NewLine}";
