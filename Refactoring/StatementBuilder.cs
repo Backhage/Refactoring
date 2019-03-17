@@ -23,21 +23,11 @@ namespace Refactoring
 
             Decimal TotalAmount()
             {
-                var total = 0m;
-                foreach (var perf in invoice.Performances)
-                {
-                    total += AmountFor(perf);
-                }
-                return total;
+                return invoice.Performances.Sum(p => AmountFor(p));
             }
             int TotalVolumeCredits()
             {
-                var volumeCredits = 0;
-                foreach (var perf in invoice.Performances)
-                {
-                    volumeCredits += VolumeCreditsFor(perf);
-                }
-                return volumeCredits;
+                return invoice.Performances.Sum(p => VolumeCreditsFor(p));
             }
             string Usd(decimal aNumber)
             {
