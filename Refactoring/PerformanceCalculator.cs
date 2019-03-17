@@ -7,7 +7,6 @@ namespace Refactoring
     internal class PerformanceCalculator
     {
         private readonly Performance _performance;
-        public Play Play { get; }
 
         public PerformanceCalculator(Performance aPerformance, Play aPlay)
         {
@@ -15,31 +14,46 @@ namespace Refactoring
             Play = aPlay;
         }
 
-        public decimal Amount()
+        public Play Play { get; }
+        public decimal Amount
         {
-            decimal result;
-            switch (Play.Type)
+            get
             {
-                case "tragedy":
-                    result = 40_000m;
-                    if (_performance.Audience > 30)
-                    {
-                        result += 1_000 * (_performance.Audience - 30);
-                    }
-                    break;
-                case "comedy":
-                    result = 30_000m;
-                    if (_performance.Audience > 20)
-                    {
-                        result += 10_000 + 500 * (_performance.Audience - 20);
-                    }
-                    result += 300 * _performance.Audience;
-                    break;
-                default:
-                    throw new ArgumentException($"unknown type: {Play.Type}");
-            }
+                decimal result;
+                switch (Play.Type)
+                {
+                    case "tragedy":
+                        result = 40_000m;
+                        if (_performance.Audience > 30)
+                        {
+                            result += 1_000 * (_performance.Audience - 30);
+                        }
+                        break;
+                    case "comedy":
+                        result = 30_000m;
+                        if (_performance.Audience > 20)
+                        {
+                            result += 10_000 + 500 * (_performance.Audience - 20);
+                        }
+                        result += 300 * _performance.Audience;
+                        break;
+                    default:
+                        throw new ArgumentException($"unknown type: {Play.Type}");
+                }
 
-            return result;
+                return result;
+            }
+        }
+
+        public int VolumeCredits
+        {
+            get
+            {
+                var credits = 0;
+                credits += Math.Max(_performance.Audience - 30, 0);
+                if ("comedy" == Play.Type) credits += _performance.Audience / 5;
+                return credits;
+            }
         }
     }
 }

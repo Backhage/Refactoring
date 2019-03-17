@@ -19,24 +19,18 @@ namespace Refactoring
             EnrichedPerformance EnrichPerformance(Invoice.Performance aPerformance)
             {
                 var calculator = new PerformanceCalculator(aPerformance, PlayFor(aPerformance));
-                var result = new EnrichedPerformance(aPerformance);
-                result.Play = calculator.Play;
-                result.Amount = calculator.Amount();
-                result.VolumeCredits = VolumeCreditsFor(result);
+                var result = new EnrichedPerformance(aPerformance)
+                {
+                    Play = calculator.Play,
+                    Amount = calculator.Amount,
+                    VolumeCredits = calculator.VolumeCredits
+                };
                 return result;
             }
 
             Play PlayFor(Invoice.Performance aPerformance)
             {
                 return plays.Single(p => p.PlayId == aPerformance.PlayId);
-            }
-
-            int VolumeCreditsFor(EnrichedPerformance aPerformance)
-            {
-                var credits = 0;
-                credits += Math.Max(aPerformance.Audience - 30, 0);
-                if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
-                return credits;
             }
 
             decimal TotalAmount(StatementData data)
