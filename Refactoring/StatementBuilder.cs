@@ -17,17 +17,34 @@ namespace Refactoring
             };
 
             return RenderPlainText(statementData, plays);
-        }
 
-        private static Invoice.Performance EnrichPerformance(Invoice.Performance performance)
-        {
-            return performance;
+            EnrichedPerformance EnrichPerformance(Invoice.Performance performance)
+            {
+                var result = new EnrichedPerformance(performance);
+                result.Play = PlayFor(result);
+                return result;
+            }
+
+            Play PlayFor(Invoice.Performance aPerformance)
+            {
+                return plays.Single(p => p.PlayId == aPerformance.PlayId);
+            }
         }
 
         private class StatementData
         {
             public string Customer { get; set; }
-            public IEnumerable<Invoice.Performance> Performances { get; set; }
+            public IEnumerable<EnrichedPerformance> Performances { get; set; }
+        }
+
+        private class EnrichedPerformance : Invoice.Performance
+        {
+            public Play Play { get; set; }
+
+            public EnrichedPerformance(Invoice.Performance performance)
+                : base(performance.PlayId, performance.Audience)
+            {
+            }
         }
 
         private static string RenderPlainText(StatementData data, IEnumerable<Play> plays)
@@ -36,7 +53,7 @@ namespace Refactoring
 
             foreach (var perf in data.Performances)
             {
-                result += $"  {PlayFor(perf).Name}: {Usd(AmountFor(perf))} ({perf.Audience} seats){Environment.NewLine}";
+                result += $"  {perf.Play.Name}: {Usd(AmountFor(perf))} ({perf.Audience} seats){Environment.NewLine}";
             }
 
             result += $"Amount owed is {Usd(TotalAmount())}{Environment.NewLine}";
@@ -55,21 +72,17 @@ namespace Refactoring
             {
                 return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
             }
-            int VolumeCreditsFor(Invoice.Performance aPerformance)
+            int VolumeCreditsFor(EnrichedPerformance aPerformance)
             {
                 var credits = 0;
                 credits += Math.Max(aPerformance.Audience - 30, 0);
-                if ("comedy" == PlayFor(aPerformance).Type) credits += aPerformance.Audience / 5;
+                if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
                 return credits;
             }
-            Play PlayFor(Invoice.Performance aPerformance)
-            {
-                return plays.Single(p => p.PlayId == aPerformance.PlayId);
-            }
-            decimal AmountFor(Invoice.Performance aPerformance)
+            decimal AmountFor(EnrichedPerformance aPerformance)
             {
                 decimal amount;
-                switch (PlayFor(aPerformance).Type)
+                switch (aPerformance.Play.Type)
                 {
                     case "tragedy":
                         amount = 40_000m;
@@ -87,7 +100,7 @@ namespace Refactoring
                         amount += 300 * aPerformance.Audience;
                         break;
                     default:
-                        throw new ArgumentException($"unknown type: {PlayFor(aPerformance).Type}");
+                        throw new ArgumentException($"unknown type: {aPerformance.Play.Type}");
                 }
 
                 return amount;
