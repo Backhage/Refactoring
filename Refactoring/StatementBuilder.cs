@@ -36,25 +36,25 @@ namespace Refactoring
             return result;
         }
 
-        private static decimal AmountFor(Invoice.Performance perf, Play play)
+        private static decimal AmountFor(Invoice.Performance aPerformance, Play play)
         {
             decimal result;
             switch (play.Type)
             {
                 case "tragedy":
                     result = 40_000m;
-                    if (perf.Audience > 30)
+                    if (aPerformance.Audience > 30)
                     {
-                        result += 1_000 * (perf.Audience - 30);
+                        result += 1_000 * (aPerformance.Audience - 30);
                     }
                     break;
                 case "comedy":
                     result = 30_000m;
-                    if (perf.Audience > 20)
+                    if (aPerformance.Audience > 20)
                     {
-                        result += 10_000 + 500 * (perf.Audience - 20);
+                        result += 10_000 + 500 * (aPerformance.Audience - 20);
                     }
-                    result += 300 * perf.Audience;
+                    result += 300 * aPerformance.Audience;
                     break;
                 default:
                     throw new ArgumentException($"unknown type: {play.Type}");
