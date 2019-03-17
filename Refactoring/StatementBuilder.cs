@@ -38,29 +38,29 @@ namespace Refactoring
 
         private static decimal AmountFor(Invoice.Performance perf, Play play)
         {
-            decimal thisAmount;
+            decimal result;
             switch (play.Type)
             {
                 case "tragedy":
-                    thisAmount = 40_000m;
+                    result = 40_000m;
                     if (perf.Audience > 30)
                     {
-                        thisAmount += 1_000 * (perf.Audience - 30);
+                        result += 1_000 * (perf.Audience - 30);
                     }
                     break;
                 case "comedy":
-                    thisAmount = 30_000m;
+                    result = 30_000m;
                     if (perf.Audience > 20)
                     {
-                        thisAmount += 10_000 + 500 * (perf.Audience - 20);
+                        result += 10_000 + 500 * (perf.Audience - 20);
                     }
-                    thisAmount += 300 * perf.Audience;
+                    result += 300 * perf.Audience;
                     break;
                 default:
                     throw new ArgumentException($"unknown type: {play.Type}");
             }
 
-            return thisAmount;
+            return result;
         }
     }
 }
