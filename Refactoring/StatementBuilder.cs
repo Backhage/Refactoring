@@ -31,8 +31,8 @@ namespace Refactoring
 
             result.Append($"Amount owed is {Usd(data.TotalAmount)}{Environment.NewLine}");
             result.Append($"You earned {data.TotalVolumeCredits} credits{Environment.NewLine}");
-            return result.ToString();
 
+            return result.ToString();
         }
 
         private static string RenderHtml(StatementData data)
