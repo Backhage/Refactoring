@@ -19,7 +19,7 @@ namespace Refactoring
             {
                 var thisAmount = 0m;
 
-                thisAmount = AmountFor(perf, PlayFor(perf));
+                thisAmount = AmountFor(perf);
 
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
@@ -34,7 +34,7 @@ namespace Refactoring
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
 
-            decimal AmountFor(Invoice.Performance aPerformance, Play play)
+            decimal AmountFor(Invoice.Performance aPerformance)
             {
                 decimal amount;
                 switch (PlayFor(aPerformance).Type)
