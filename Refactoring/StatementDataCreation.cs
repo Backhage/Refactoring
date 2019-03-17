@@ -1,5 +1,4 @@
 ﻿using Refactoring.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +15,7 @@ namespace Refactoring
             statementData.TotalVolumeCredits = TotalVolumeCredits(statementData);
             return statementData;
 
-            EnrichedPerformance EnrichPerformance(Invoice.Performance aPerformance)
+            EnrichedPerformance EnrichPerformance(Performance aPerformance)
             {
                 var calculator = PerformanceCalculatorFactory.Create(aPerformance, PlayFor(aPerformance));
                 var result = new EnrichedPerformance(aPerformance)
@@ -28,7 +27,7 @@ namespace Refactoring
                 return result;
             }
 
-            Play PlayFor(Invoice.Performance aPerformance)
+            Play PlayFor(Performance aPerformance)
             {
                 return plays.Single(p => p.PlayId == aPerformance.PlayId);
             }
@@ -52,13 +51,13 @@ namespace Refactoring
             public int TotalVolumeCredits { get; set; }
         }
 
-        internal class EnrichedPerformance : Invoice.Performance
+        internal class EnrichedPerformance : Performance
         {
             public Play Play { get; set; }
             public decimal Amount { get; set; }
             public int VolumeCredits { get; set; }
 
-            public EnrichedPerformance(Invoice.Performance performance)
+            public EnrichedPerformance(Performance performance)
                 : base(performance.PlayId, performance.Audience)
             {
             }

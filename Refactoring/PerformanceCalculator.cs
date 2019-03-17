@@ -1,6 +1,5 @@
 ﻿using Refactoring.Models;
 using System;
-using static Refactoring.Models.Invoice;
 
 namespace Refactoring
 {
