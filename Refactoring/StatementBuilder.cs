@@ -34,37 +34,37 @@ namespace Refactoring
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
 
+            decimal AmountFor(Invoice.Performance aPerformance, Play play)
+            {
+                decimal amount;
+                switch (play.Type)
+                {
+                    case "tragedy":
+                        amount = 40_000m;
+                        if (aPerformance.Audience > 30)
+                        {
+                            amount += 1_000 * (aPerformance.Audience - 30);
+                        }
+                        break;
+                    case "comedy":
+                        amount = 30_000m;
+                        if (aPerformance.Audience > 20)
+                        {
+                            amount += 10_000 + 500 * (aPerformance.Audience - 20);
+                        }
+                        amount += 300 * aPerformance.Audience;
+                        break;
+                    default:
+                        throw new ArgumentException($"unknown type: {play.Type}");
+                }
+
+                return amount;
+            }
+
             Play PlayFor(Invoice.Performance aPerformance)
             {
                 return plays.Single(p => p.PlayId == aPerformance.PlayId);
             }
-        }
-
-        private static decimal AmountFor(Invoice.Performance aPerformance, Play play)
-        {
-            decimal result;
-            switch (play.Type)
-            {
-                case "tragedy":
-                    result = 40_000m;
-                    if (aPerformance.Audience > 30)
-                    {
-                        result += 1_000 * (aPerformance.Audience - 30);
-                    }
-                    break;
-                case "comedy":
-                    result = 30_000m;
-                    if (aPerformance.Audience > 20)
-                    {
-                        result += 10_000 + 500 * (aPerformance.Audience - 20);
-                    }
-                    result += 300 * aPerformance.Audience;
-                    break;
-                default:
-                    throw new ArgumentException($"unknown type: {play.Type}");
-            }
-
-            return result;
         }
     }
 }
