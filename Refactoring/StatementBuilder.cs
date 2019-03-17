@@ -10,13 +10,16 @@ namespace Refactoring
     {
         public static string Statement(Invoice invoice, IEnumerable<Play> plays)
         {
+            return RenderPlainText(CreateStatementData(invoice, plays));
+        }
+
+        private static StatementData CreateStatementData(Invoice invoice, IEnumerable<Play> plays)
+        {
             var statementData = new StatementData();
             statementData.Customer = invoice.Customer;
             statementData.Performances = invoice.Performances.Select(EnrichPerformance);
             statementData.TotalAmount = TotalAmount(statementData);
             statementData.TotalVolumeCredits = TotalVolumeCredits(statementData);
-
-            return RenderPlainText(statementData);
 
             EnrichedPerformance EnrichPerformance(Invoice.Performance performance)
             {
@@ -31,6 +34,7 @@ namespace Refactoring
             {
                 return plays.Single(p => p.PlayId == aPerformance.PlayId);
             }
+
             decimal AmountFor(EnrichedPerformance aPerformance)
             {
                 decimal amount;
@@ -57,6 +61,7 @@ namespace Refactoring
 
                 return amount;
             }
+
             int VolumeCreditsFor(EnrichedPerformance aPerformance)
             {
                 var credits = 0;
@@ -64,15 +69,20 @@ namespace Refactoring
                 if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
                 return credits;
             }
+
             decimal TotalAmount(StatementData data)
             {
                 return data.Performances.Sum(p => p.Amount);
             }
+
             int TotalVolumeCredits(StatementData data)
             {
                 return data.Performances.Sum(p => p.VolumeCredits);
             }
+
+            return statementData;
         }
+
 
         private class StatementData
         {
