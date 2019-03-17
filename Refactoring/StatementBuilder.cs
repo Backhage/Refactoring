@@ -20,12 +20,17 @@ namespace Refactoring
                 volumeCredits += VolumeCreditsFor(perf);
 
                 // print line for this order
-                result += $"  {PlayFor(perf).Name}: {(AmountFor(perf) / 100).ToString("C", format)} ({perf.Audience} seats){Environment.NewLine}";
+                result += $"  {PlayFor(perf).Name}: {Format(AmountFor(perf) / 100)} ({perf.Audience} seats){Environment.NewLine}";
                 totalAmount += AmountFor(perf);
             }
             result += $"Amount owed is {(totalAmount / 100).ToString("C", format)}{Environment.NewLine}";
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
+
+            string Format(decimal aNumber)
+            {
+                return aNumber.ToString("C", new CultureInfo("en-US"));
+            }
 
             int VolumeCreditsFor(Invoice.Performance aPerformance)
             {
