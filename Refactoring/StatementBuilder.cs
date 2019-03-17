@@ -37,7 +37,7 @@ namespace Refactoring
             decimal AmountFor(Invoice.Performance aPerformance, Play play)
             {
                 decimal amount;
-                switch (play.Type)
+                switch (PlayFor(aPerformance).Type)
                 {
                     case "tragedy":
                         amount = 40_000m;
@@ -55,7 +55,7 @@ namespace Refactoring
                         amount += 300 * aPerformance.Audience;
                         break;
                     default:
-                        throw new ArgumentException($"unknown type: {play.Type}");
+                        throw new ArgumentException($"unknown type: {PlayFor(aPerformance).Type}");
                 }
 
                 return amount;
