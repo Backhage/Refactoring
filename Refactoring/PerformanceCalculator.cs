@@ -56,4 +56,20 @@ namespace Refactoring
             }
         }
     }
+
+    internal class TragedyCalculator : PerformanceCalculator
+    {
+        public TragedyCalculator(Performance aPerformance, Play aPlay)
+            : base(aPerformance, aPlay)
+        {
+        }
+    }
+
+    internal class ComedyCalculator : PerformanceCalculator
+    {
+        public ComedyCalculator(Performance aPerformance, Play aPlay)
+            : base(aPerformance, aPlay)
+        {
+        }
+    }
 }

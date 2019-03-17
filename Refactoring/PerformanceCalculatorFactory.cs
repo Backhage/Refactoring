@@ -1,4 +1,5 @@
 ﻿using Refactoring.Models;
+using System;
 using static Refactoring.Models.Invoice;
 
 namespace Refactoring
@@ -7,7 +8,15 @@ namespace Refactoring
     {
         public static PerformanceCalculator Create(Performance aPerformance, Play aPlay)
         {
-            return new PerformanceCalculator(aPerformance, aPlay);
+            switch (aPlay.Type)
+            {
+                case "tragedy":
+                    return new TragedyCalculator(aPerformance, aPlay);
+                case "comedy":
+                    return new ComedyCalculator(aPerformance, aPlay);
+                default:
+                    throw new ArgumentException($"Unknown type: {aPlay.Type}");
+            }
         }
     }
 }
