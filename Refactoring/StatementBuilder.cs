@@ -13,10 +13,15 @@ namespace Refactoring
             var statementData = new StatementData
             {
                 Customer = invoice.Customer,
-                Performances = invoice.Performances
+                Performances = invoice.Performances.Select(EnrichPerformance)
             };
 
             return RenderPlainText(statementData, plays);
+        }
+
+        private static Invoice.Performance EnrichPerformance(Invoice.Performance performance)
+        {
+            return performance;
         }
 
         private class StatementData
