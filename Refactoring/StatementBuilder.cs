@@ -33,19 +33,31 @@ namespace Refactoring
             result.Append($"You earned {data.TotalVolumeCredits} credits{Environment.NewLine}");
             return result.ToString();
 
-            string Usd(decimal aNumber)
-            {
-                return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
-            }
         }
 
         private static string RenderHtml(StatementData data)
         {
-            var result = $"<h1>Statement for {data.Customer}</h1>{Environment.NewLine}"
-                + $"<table>{Environment.NewLine}"
-                + $"<tr><th>play</th><th>seats</th><th>cost</th></tr>";
+            var result = new StringBuilder();
 
-            return result;
+            result.Append($"<h1>Statement for {data.Customer}</h1>{Environment.NewLine}");
+            result.Append($"<table>{Environment.NewLine}");
+            result.Append($"<tr><th>play</th><th>seats</th><th>cost</th></tr>{Environment.NewLine}");
+
+            foreach (var perf in data.Performances)
+            {
+                result.Append($"<tr><td>{perf.Play.Name}</td><td>{perf.Audience}</td><td>{Usd(perf.Amount)}</td><tr>{Environment.NewLine}");
+            }
+
+            result.Append($"</table>{Environment.NewLine}");
+            result.Append($"<p>Amound owed is <em>{Usd(data.TotalAmount)}</em></p>{Environment.NewLine}");
+            result.Append($"<p>You earned <em>{data.TotalVolumeCredits}</em> credits</p>{Environment.NewLine}");
+
+            return result.ToString();
+        }
+
+        private static string Usd(decimal aNumber)
+        {
+            return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
         }
     }
 }

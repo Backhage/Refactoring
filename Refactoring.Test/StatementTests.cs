@@ -7,23 +7,28 @@ namespace Refactoring.Test
 {
     public class StatementTests
     {
-        [Test]
-        public void CreateStatement()
+        private List<Play> _plays;
+        private Invoice _invoice;
+
+        [SetUp]
+        public void SetUp()
         {
-            var plays = new List<Play>
+            _plays = new List<Play>
             {
                 new Play("hamlet", "Hamlet", "tragedy"),
                 new Play("as-like", "As You Like It", "comedy"),
                 new Play("othello", "Othello", "tragedy")
             };
 
-            var invoice = new Invoice("BigCo");
-            invoice.Add("hamlet", 55);
-            invoice.Add("as-like", 35);
-            invoice.Add("othello", 40);
+            _invoice = new Invoice("BigCo");
+            _invoice.Add("hamlet", 55);
+            _invoice.Add("as-like", 35);
+            _invoice.Add("othello", 40);
+        }
 
-            var statement = StatementBuilder.Statement(invoice, plays);
-
+        [Test]
+        public void CreateStatement()
+        {
             Assert.AreEqual(
                 $"Statement for BigCo{Environment.NewLine}"
                 + $"  Hamlet: $650.00 (55 seats){Environment.NewLine}"
@@ -31,7 +36,23 @@ namespace Refactoring.Test
                 + $"  Othello: $500.00 (40 seats){Environment.NewLine}"
                 + $"Amount owed is $1,730.00{Environment.NewLine}"
                 + $"You earned 47 credits{Environment.NewLine}",
-                statement);
+                StatementBuilder.Statement(_invoice, _plays));
+        }
+
+        [Test]
+        public void CreateHtmlStatement()
+        {
+            Assert.AreEqual(
+                $"<h1>Statement for BigCo</h1>{Environment.NewLine}"
+                + $"<table>{Environment.NewLine}"
+                + $"<tr><th>play</th><th>seats</th><th>cost</th></tr>{Environment.NewLine}"
+                + $"<tr><td>Hamlet</td><td>55</td><td>$650.00</td><tr>{Environment.NewLine}"
+                + $"<tr><td>As You Like It</td><td>35</td><td>$580.00</td><tr>{Environment.NewLine}"
+                + $"<tr><td>Othello</td><td>40</td><td>$500.00</td><tr>{Environment.NewLine}"
+                + $"</table>{Environment.NewLine}"
+                + $"<p>Amound owed is <em>$1,730.00</em></p>{Environment.NewLine}"
+                + $"<p>You earned <em>47</em> credits</p>{Environment.NewLine}",
+                StatementBuilder.HtmlStatement(_invoice, _plays));
         }
     }
 }
