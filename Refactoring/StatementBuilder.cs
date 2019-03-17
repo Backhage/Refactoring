@@ -16,12 +16,16 @@ namespace Refactoring
 
             foreach (var perf in invoice.Performances)
             {
-                volumeCredits += VolumeCreditsFor(perf);
-
                 // print line for this order
                 result += $"  {PlayFor(perf).Name}: {Usd(AmountFor(perf))} ({perf.Audience} seats){Environment.NewLine}";
                 totalAmount += AmountFor(perf);
             }
+
+            foreach (var perf in invoice.Performances)
+            {
+                volumeCredits += VolumeCreditsFor(perf);
+            }
+
             result += $"Amount owed is {Usd(totalAmount)}{Environment.NewLine}";
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
