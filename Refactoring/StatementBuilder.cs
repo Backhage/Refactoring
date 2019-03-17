@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using static Refactoring.StatementDataCreation;
 
 namespace Refactoring
@@ -20,16 +21,17 @@ namespace Refactoring
 
         private static string RenderPlainText(StatementData data)
         {
-            var result = $"Statement for {data.Customer}{Environment.NewLine}";
+            var result = new StringBuilder();
+            result.Append($"Statement for {data.Customer}{Environment.NewLine}");
 
             foreach (var perf in data.Performances)
             {
-                result += $"  {perf.Play.Name}: {Usd(perf.Amount)} ({perf.Audience} seats){Environment.NewLine}";
+                result.Append($"  {perf.Play.Name}: {Usd(perf.Amount)} ({perf.Audience} seats){Environment.NewLine}");
             }
 
-            result += $"Amount owed is {Usd(data.TotalAmount)}{Environment.NewLine}";
-            result += $"You earned {data.TotalVolumeCredits} credits{Environment.NewLine}";
-            return result;
+            result.Append($"Amount owed is {Usd(data.TotalAmount)}{Environment.NewLine}");
+            result.Append($"You earned {data.TotalVolumeCredits} credits{Environment.NewLine}");
+            return result.ToString();
 
             string Usd(decimal aNumber)
             {
@@ -39,7 +41,11 @@ namespace Refactoring
 
         private static string RenderHtml(StatementData data)
         {
-            return string.Empty;
+            var result = $"<h1>Statement for {data.Customer}</h1>{Environment.NewLine}"
+                + $"<table>{Environment.NewLine}"
+                + $"<tr><th>play</th><th>seats</th><th>cost</th></tr>";
+
+            return result;
         }
     }
 }
