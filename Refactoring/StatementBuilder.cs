@@ -16,7 +16,7 @@ namespace Refactoring
             statementData.TotalAmount = TotalAmount(statementData);
             statementData.TotalVolumeCredits = TotalVolumeCredits(statementData);
 
-            return RenderPlainText(statementData, plays);
+            return RenderPlainText(statementData);
 
             EnrichedPerformance EnrichPerformance(Invoice.Performance performance)
             {
@@ -94,7 +94,7 @@ namespace Refactoring
             }
         }
 
-        private static string RenderPlainText(StatementData data, IEnumerable<Play> plays)
+        private static string RenderPlainText(StatementData data)
         {
             var result = $"Statement for {data.Customer}{Environment.NewLine}";
 
