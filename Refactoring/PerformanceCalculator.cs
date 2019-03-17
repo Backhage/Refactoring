@@ -18,13 +18,12 @@ namespace Refactoring
 
         public abstract decimal Amount { get; }
 
-        public int VolumeCredits
+        public virtual int VolumeCredits
         {
             get
             {
                 var credits = 0;
                 credits += Math.Max(_performance.Audience - 30, 0);
-                if ("comedy" == Play.Type) credits += _performance.Audience / 5;
                 return credits;
             }
         }
@@ -71,5 +70,7 @@ namespace Refactoring
                 return result;
             }
         }
+
+        public override int VolumeCredits => base.VolumeCredits + _performance.Audience / 5;
     }
 }
