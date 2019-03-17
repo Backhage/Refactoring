@@ -21,7 +21,7 @@ namespace Refactoring
                 var calculator = new PerformanceCalculator(aPerformance, PlayFor(aPerformance));
                 var result = new EnrichedPerformance(aPerformance);
                 result.Play = calculator.Play;
-                result.Amount = AmountFor(result);
+                result.Amount = calculator.Amount();
                 result.VolumeCredits = VolumeCreditsFor(result);
                 return result;
             }
@@ -29,33 +29,6 @@ namespace Refactoring
             Play PlayFor(Invoice.Performance aPerformance)
             {
                 return plays.Single(p => p.PlayId == aPerformance.PlayId);
-            }
-
-            decimal AmountFor(EnrichedPerformance aPerformance)
-            {
-                decimal amount;
-                switch (aPerformance.Play.Type)
-                {
-                    case "tragedy":
-                        amount = 40_000m;
-                        if (aPerformance.Audience > 30)
-                        {
-                            amount += 1_000 * (aPerformance.Audience - 30);
-                        }
-                        break;
-                    case "comedy":
-                        amount = 30_000m;
-                        if (aPerformance.Audience > 20)
-                        {
-                            amount += 10_000 + 500 * (aPerformance.Audience - 20);
-                        }
-                        amount += 300 * aPerformance.Audience;
-                        break;
-                    default:
-                        throw new ArgumentException($"unknown type: {aPerformance.Play.Type}");
-                }
-
-                return amount;
             }
 
             int VolumeCreditsFor(EnrichedPerformance aPerformance)
