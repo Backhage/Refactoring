@@ -22,6 +22,7 @@ namespace Refactoring
             {
                 var result = new EnrichedPerformance(performance);
                 result.Play = PlayFor(result);
+                result.Amount = AmountFor(result);
                 return result;
             }
 
@@ -29,56 +30,7 @@ namespace Refactoring
             {
                 return plays.Single(p => p.PlayId == aPerformance.PlayId);
             }
-        }
 
-        private class StatementData
-        {
-            public string Customer { get; set; }
-            public IEnumerable<EnrichedPerformance> Performances { get; set; }
-        }
-
-        private class EnrichedPerformance : Invoice.Performance
-        {
-            public Play Play { get; set; }
-
-            public EnrichedPerformance(Invoice.Performance performance)
-                : base(performance.PlayId, performance.Audience)
-            {
-            }
-        }
-
-        private static string RenderPlainText(StatementData data, IEnumerable<Play> plays)
-        {
-            var result = $"Statement for {data.Customer}{Environment.NewLine}";
-
-            foreach (var perf in data.Performances)
-            {
-                result += $"  {perf.Play.Name}: {Usd(AmountFor(perf))} ({perf.Audience} seats){Environment.NewLine}";
-            }
-
-            result += $"Amount owed is {Usd(TotalAmount())}{Environment.NewLine}";
-            result += $"You earned {TotalVolumeCredits()} credits{Environment.NewLine}";
-            return result;
-
-            decimal TotalAmount()
-            {
-                return data.Performances.Sum(p => AmountFor(p));
-            }
-            int TotalVolumeCredits()
-            {
-                return data.Performances.Sum(p => VolumeCreditsFor(p));
-            }
-            string Usd(decimal aNumber)
-            {
-                return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
-            }
-            int VolumeCreditsFor(EnrichedPerformance aPerformance)
-            {
-                var credits = 0;
-                credits += Math.Max(aPerformance.Audience - 30, 0);
-                if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
-                return credits;
-            }
             decimal AmountFor(EnrichedPerformance aPerformance)
             {
                 decimal amount;
@@ -104,6 +56,57 @@ namespace Refactoring
                 }
 
                 return amount;
+            }
+        }
+
+        private class StatementData
+        {
+            public string Customer { get; set; }
+            public IEnumerable<EnrichedPerformance> Performances { get; set; }
+        }
+
+        private class EnrichedPerformance : Invoice.Performance
+        {
+            public Play Play { get; set; }
+            public decimal Amount { get; set; }
+
+            public EnrichedPerformance(Invoice.Performance performance)
+                : base(performance.PlayId, performance.Audience)
+            {
+            }
+        }
+
+        private static string RenderPlainText(StatementData data, IEnumerable<Play> plays)
+        {
+            var result = $"Statement for {data.Customer}{Environment.NewLine}";
+
+            foreach (var perf in data.Performances)
+            {
+                result += $"  {perf.Play.Name}: {Usd(perf.Amount)} ({perf.Audience} seats){Environment.NewLine}";
+            }
+
+            result += $"Amount owed is {Usd(TotalAmount())}{Environment.NewLine}";
+            result += $"You earned {TotalVolumeCredits()} credits{Environment.NewLine}";
+            return result;
+
+            decimal TotalAmount()
+            {
+                return data.Performances.Sum(p => p.Amount);
+            }
+            int TotalVolumeCredits()
+            {
+                return data.Performances.Sum(p => VolumeCreditsFor(p));
+            }
+            string Usd(decimal aNumber)
+            {
+                return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
+            }
+            int VolumeCreditsFor(EnrichedPerformance aPerformance)
+            {
+                var credits = 0;
+                credits += Math.Max(aPerformance.Audience - 30, 0);
+                if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
+                return credits;
             }
         }
     }
