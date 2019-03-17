@@ -10,11 +10,22 @@ namespace Refactoring
     {
         public static string Statement(Invoice invoice, IEnumerable<Play> plays)
         {
-            var statementData = new { invoice.Customer };
+            var statementData = new StatementData
+            {
+                Customer = invoice.Customer,
+                Performances = invoice.Performances
+            };
+
             return RenderPlainText(statementData, invoice, plays);
         }
 
-        private static string RenderPlainText(dynamic data, Invoice invoice, IEnumerable<Play> plays)
+        private class StatementData
+        {
+            public string Customer { get; set; }
+            public IEnumerable<Invoice.Performance> Performances { get; set; }
+        }
+
+        private static string RenderPlainText(StatementData data, Invoice invoice, IEnumerable<Play> plays)
         {
             var result = $"Statement for {data.Customer}{Environment.NewLine}";
 
