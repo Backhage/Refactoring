@@ -18,7 +18,7 @@ namespace Refactoring
 
             EnrichedPerformance EnrichPerformance(Invoice.Performance aPerformance)
             {
-                var calculator = new PerformanceCalculator(aPerformance, PlayFor(aPerformance));
+                var calculator = PerformanceCalculatorFactory.Create(aPerformance, PlayFor(aPerformance));
                 var result = new EnrichedPerformance(aPerformance)
                 {
                     Play = calculator.Play,
