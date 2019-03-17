@@ -11,7 +11,6 @@ namespace Refactoring
         public static string Statement(Invoice invoice, IEnumerable<Play> plays)
         {
             var totalAmount = 0m;
-            var volumeCredits = 0;
             var result = $"Statement for {invoice.Customer}{Environment.NewLine}";
 
             foreach (var perf in invoice.Performances)
@@ -21,18 +20,23 @@ namespace Refactoring
                 totalAmount += AmountFor(perf);
             }
 
-            foreach (var perf in invoice.Performances)
-            {
-                volumeCredits += VolumeCreditsFor(perf);
-            }
-
             result += $"Amount owed is {Usd(totalAmount)}{Environment.NewLine}";
-            result += $"You earned {volumeCredits} credits{Environment.NewLine}";
+            result += $"You earned {TotalVolumeCredits()} credits{Environment.NewLine}";
             return result;
 
             string Usd(decimal aNumber)
             {
                 return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
+            }
+
+            int TotalVolumeCredits()
+            {
+                var volumeCredits = 0;
+                foreach (var perf in invoice.Performances)
+                {
+                    volumeCredits += VolumeCreditsFor(perf);
+                }
+                return volumeCredits;
             }
 
             int VolumeCreditsFor(Invoice.Performance aPerformance)
