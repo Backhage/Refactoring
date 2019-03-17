@@ -10,7 +10,6 @@ namespace Refactoring
     {
         public static string Statement(Invoice invoice, IEnumerable<Play> plays)
         {
-            var totalAmount = TotalAmount();
             var result = $"Statement for {invoice.Customer}{Environment.NewLine}";
 
             foreach (var perf in invoice.Performances)
@@ -18,7 +17,7 @@ namespace Refactoring
                 result += $"  {PlayFor(perf).Name}: {Usd(AmountFor(perf))} ({perf.Audience} seats){Environment.NewLine}";
             }
 
-            result += $"Amount owed is {Usd(totalAmount)}{Environment.NewLine}";
+            result += $"Amount owed is {Usd(TotalAmount())}{Environment.NewLine}";
             result += $"You earned {TotalVolumeCredits()} credits{Environment.NewLine}";
             return result;
 
