@@ -30,12 +30,6 @@ namespace Refactoring
                 }
                 return total;
             }
-
-            string Usd(decimal aNumber)
-            {
-                return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
-            }
-
             int TotalVolumeCredits()
             {
                 var volumeCredits = 0;
@@ -45,7 +39,10 @@ namespace Refactoring
                 }
                 return volumeCredits;
             }
-
+            string Usd(decimal aNumber)
+            {
+                return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
+            }
             int VolumeCreditsFor(Invoice.Performance aPerformance)
             {
                 var credits = 0;
@@ -53,7 +50,10 @@ namespace Refactoring
                 if ("comedy" == PlayFor(aPerformance).Type) credits += aPerformance.Audience / 5;
                 return credits;
             }
-
+            Play PlayFor(Invoice.Performance aPerformance)
+            {
+                return plays.Single(p => p.PlayId == aPerformance.PlayId);
+            }
             decimal AmountFor(Invoice.Performance aPerformance)
             {
                 decimal amount;
@@ -79,11 +79,6 @@ namespace Refactoring
                 }
 
                 return amount;
-            }
-
-            Play PlayFor(Invoice.Performance aPerformance)
-            {
-                return plays.Single(p => p.PlayId == aPerformance.PlayId);
             }
         }
     }
