@@ -20,26 +20,7 @@ namespace Refactoring
                 var play = plays.Single(p => p.PlayId == perf.PlayId);
                 var thisAmount = 0m;
 
-                switch (play.Type)
-                {
-                    case "tragedy":
-                        thisAmount = 40_000m;
-                        if (perf.Audience > 30)
-                        {
-                            thisAmount += 1_000 * (perf.Audience - 30);
-                        }
-                    break;
-                    case "comedy":
-                        thisAmount = 30_000m;
-                        if (perf.Audience > 20)
-                        {
-                            thisAmount += 10_000 + 500 * (perf.Audience - 20);
-                        }
-                        thisAmount += 300 * perf.Audience;
-                        break;
-                    default:
-                        throw new ArgumentException($"unknown type: {play.Type}");
-                }
+                thisAmount = AmountFor(perf, play);
 
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
@@ -53,6 +34,33 @@ namespace Refactoring
             result += $"Amount owed is {(totalAmount / 100).ToString("C", format)}{Environment.NewLine}";
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
+        }
+
+        private static decimal AmountFor(Invoice.Performance perf, Play play)
+        {
+            decimal thisAmount;
+            switch (play.Type)
+            {
+                case "tragedy":
+                    thisAmount = 40_000m;
+                    if (perf.Audience > 30)
+                    {
+                        thisAmount += 1_000 * (perf.Audience - 30);
+                    }
+                    break;
+                case "comedy":
+                    thisAmount = 30_000m;
+                    if (perf.Audience > 20)
+                    {
+                        thisAmount += 10_000 + 500 * (perf.Audience - 20);
+                    }
+                    thisAmount += 300 * perf.Audience;
+                    break;
+                default:
+                    throw new ArgumentException($"unknown type: {play.Type}");
+            }
+
+            return thisAmount;
         }
     }
 }
