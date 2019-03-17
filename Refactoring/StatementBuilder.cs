@@ -17,10 +17,7 @@ namespace Refactoring
 
             foreach (var perf in invoice.Performances)
             {
-                // add volume credits
-                volumeCredits += Math.Max(perf.Audience - 30, 0);
-                // add extra credit for every ten attendees
-                if ("comedy" == PlayFor(perf).Type) volumeCredits += perf.Audience / 5;
+                volumeCredits += VolumeCreditsFor(perf);
 
                 // print line for this order
                 result += $"  {PlayFor(perf).Name}: {(AmountFor(perf) / 100).ToString("C", format)} ({perf.Audience} seats){Environment.NewLine}";
@@ -29,6 +26,14 @@ namespace Refactoring
             result += $"Amount owed is {(totalAmount / 100).ToString("C", format)}{Environment.NewLine}";
             result += $"You earned {volumeCredits} credits{Environment.NewLine}";
             return result;
+
+            int VolumeCreditsFor(Invoice.Performance aPerformance)
+            {
+                var credits = 0;
+                credits += Math.Max(aPerformance.Audience - 30, 0);
+                if ("comedy" == PlayFor(aPerformance).Type) credits += aPerformance.Audience / 5;
+                return credits;
+            }
 
             decimal AmountFor(Invoice.Performance aPerformance)
             {
