@@ -21,7 +21,7 @@ namespace Refactoring
             result += $"You earned {TotalVolumeCredits()} credits{Environment.NewLine}";
             return result;
 
-            Decimal TotalAmount()
+            decimal TotalAmount()
             {
                 return invoice.Performances.Sum(p => AmountFor(p));
             }
