@@ -23,6 +23,7 @@ namespace Refactoring
                 var result = new EnrichedPerformance(performance);
                 result.Play = PlayFor(result);
                 result.Amount = AmountFor(result);
+                result.VolumeCredits = VolumeCreditsFor(result);
                 return result;
             }
 
@@ -30,7 +31,6 @@ namespace Refactoring
             {
                 return plays.Single(p => p.PlayId == aPerformance.PlayId);
             }
-
             decimal AmountFor(EnrichedPerformance aPerformance)
             {
                 decimal amount;
@@ -57,6 +57,13 @@ namespace Refactoring
 
                 return amount;
             }
+            int VolumeCreditsFor(EnrichedPerformance aPerformance)
+            {
+                var credits = 0;
+                credits += Math.Max(aPerformance.Audience - 30, 0);
+                if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
+                return credits;
+            }
         }
 
         private class StatementData
@@ -69,6 +76,7 @@ namespace Refactoring
         {
             public Play Play { get; set; }
             public decimal Amount { get; set; }
+            public int VolumeCredits { get; set; }
 
             public EnrichedPerformance(Invoice.Performance performance)
                 : base(performance.PlayId, performance.Audience)
@@ -95,18 +103,11 @@ namespace Refactoring
             }
             int TotalVolumeCredits()
             {
-                return data.Performances.Sum(p => VolumeCreditsFor(p));
+                return data.Performances.Sum(p => p.VolumeCredits);
             }
             string Usd(decimal aNumber)
             {
                 return (aNumber / 100).ToString("C", new CultureInfo("en-US"));
-            }
-            int VolumeCreditsFor(EnrichedPerformance aPerformance)
-            {
-                var credits = 0;
-                credits += Math.Max(aPerformance.Audience - 30, 0);
-                if ("comedy" == aPerformance.Play.Type) credits += aPerformance.Audience / 5;
-                return credits;
             }
         }
     }
