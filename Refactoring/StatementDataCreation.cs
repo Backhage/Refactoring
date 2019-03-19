@@ -8,23 +8,22 @@ namespace Refactoring
     {
         public static StatementData CreateStatementData(Invoice invoice, IEnumerable<Play> plays)
         {
-            var statementData = new StatementData();
-            statementData.Customer = invoice.Customer;
-            statementData.Performances = invoice.Performances.Select(EnrichPerformance);
-            statementData.TotalAmount = TotalAmount(statementData);
-            statementData.TotalVolumeCredits = TotalVolumeCredits(statementData);
-            return statementData;
+            var result = new StatementData();
+            result.Customer = invoice.Customer;
+            result.Performances = invoice.Performances.Select(EnrichPerformance);
+            result.TotalAmount = TotalAmount(result);
+            result.TotalVolumeCredits = TotalVolumeCredits(result);
+            return result;
 
             EnrichedPerformance EnrichPerformance(Performance aPerformance)
             {
                 var calculator = PerformanceCalculatorFactory.Create(aPerformance, PlayFor(aPerformance));
-                var result = new EnrichedPerformance(aPerformance)
+                return new EnrichedPerformance(aPerformance)
                 {
                     Play = calculator.Play,
                     Amount = calculator.Amount,
                     VolumeCredits = calculator.VolumeCredits
                 };
-                return result;
             }
 
             Play PlayFor(Performance aPerformance)
